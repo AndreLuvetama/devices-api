@@ -1,8 +1,11 @@
 
-**<h2>DEVECES-API</h2>**
+# DEVECES-API
 
-**<h3>REST API that persist and managing device resources.</h3>**
+ REST API that persist and managing device resources.
 
-**Requirements** <br>
+# **Requirements** <br>
+
+For building and running the application you need:      
+
 - JDK 21 <br>
 - Maven 3.9 <br>
