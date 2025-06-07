@@ -11,8 +11,8 @@ For building and running the application you need:
 - Maven 3.9 <br>
 
 Docker  
-#Create Network     
 
+#Create Network    
 docker create network devicesdb-network    
 
 #Run container Postgres in version 16.3  
