@@ -22,9 +22,9 @@ public class Device {
     private String name;
     @Column(name = "brand", length = 50)
     private String brand;
-    @Column(name = "creationDate")
+    @Column(name = "creationTime")
     private Time creationTime;
-    @Column(name = "status")
-    private StateEnums status;
+    @Column(name = "state")
+    private StateEnums state;
 
 }

@@ -7,7 +7,8 @@ import java.util.List;
 
 public interface DeviceService {
     Device create(DeviceDTO dto);
-    void updateDevice(Long id, DeviceDTO dto);
+    Device updateFullyDevice(DeviceDTO dto, Long id);
+    Device updatePartialDevice(DeviceDTO dto, Long id);
     Device fetchDevice(String deviceName);
     List<Device> fetchAllDevice();
     List<Device> fetchDeviceByBrand(String brandName);
