@@ -6,9 +6,9 @@
 # **Requirements** <br>
 
 For building and running the application you need:      
-
 - JDK 21 <br>
 - Maven 3.9 <br>
+- clone the project https://github.com/AndreLuvetama/devices-api.git
 
 Docker  
 
@@ -26,3 +26,24 @@ docker build -t devicesapi .
 
 #Run app   
 docker run --name devicesapi -p 8089:8089 devicesapi
+
+#End points for testing  
+Creating new device  
+http://localhost:8089/api/device
+
+Geting a single device  
+http://localhost:8089/api/device/{deviceId}
+
+Fetch devices by brand.    
+http://localhost:8089/api/device/brand/{brandName}     
+
+Fetch devices by state.           
+http://localhost:8089/api/device/state/{stateName}     
+
+Delete a single device.          
+http://localhost:8089/api/device/{deviceId}    
+
+
+
+
+
