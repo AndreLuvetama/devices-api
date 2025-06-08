@@ -21,8 +21,8 @@ docker run --name devicesdb -p 5432:5432 -e POSTGRES_PASSWORD=postgres -e POSTGR
 #Run Pgadmin 4  
 docker run --name pgadmin4 -p 15432:80 -e PGADMIN_DEFAULT_EMAIL=admin@admin.com -e PGADMIN_DEFAULT_PASSWORD=admin -d --network devicesdb-network dpage/pgadmin4
 
-#Built the app 
+#Built the app    
 docker build -t devicesapi .
 
-#Run app
+#Run app   
 docker run --name devicesapi -p 8089:8089 devicesapi
