@@ -9,9 +9,9 @@ public interface DeviceService {
     Device create(DeviceDTO dto);
     Device updateFullyDevice(DeviceDTO dto, Long id);
     Device updatePartialDevice(DeviceDTO dto, Long id);
-    Device fetchDevice(String deviceName);
+    Device fetchSingleDevice(Long deviceId);
     List<Device> fetchAllDevice();
-    List<Device> fetchDeviceByBrand(String brandName);
-    List<Device> fetchDeviceByState(String state);
-    void deleteDevice(String deviceName);
+    List<Device> fetchDevicesByBrand(String brand);
+    List<Device> fetchDevicesByState(String state);
+    void deleteDevice(Long deviceId);
 }

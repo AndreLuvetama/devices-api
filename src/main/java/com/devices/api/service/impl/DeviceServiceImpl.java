@@ -9,16 +9,15 @@ import com.devices.api.rest.mapper.DeviceMapper;
 import com.devices.api.service.DeviceService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.engine.internal.Nullability;
-import org.springframework.data.util.NullableUtils;
-import org.springframework.data.util.ReflectionUtils;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.Field;
+
 import java.sql.Time;
 import java.time.LocalTime;
 import java.util.List;
-import java.util.Map;
+
+
+import static org.springframework.util.ObjectUtils.isEmpty;
 
 @Service
 @RequiredArgsConstructor
@@ -44,72 +43,94 @@ public class DeviceServiceImpl implements DeviceService {
     @Transactional
     public Device updateFullyDevice(DeviceDTO dto, Long deviceId) {
         Device device = repository.findById(deviceId)
-                .orElseThrow(DeviceNotFoundException::new);
+                .orElseThrow(()->new DeviceNotFoundException("Device not Found"));
         Device updatedDevice = DeviceMapper.putDeviceFromDto(device, dto);
                         repository.save(updatedDevice);
         return  updatedDevice;
     }
 
-    /*@Override
-    @Transactional
-    public Device updatePartialDevice(DeviceDTO dto, Long deviceId) {
-        Device existingDevice = repository.findById(deviceId)
-                .orElseThrow(DeviceNotFoundException::new);
-
-        if (dto.getName() != null) {
-            existingDevice.setName(dto.getName());
-        }
-        if (dto.getBrand() != null) {
-            existingDevice.setBrand(dto.getBrand());
-        }
-        if (dto.getState() != null) {
-            existingDevice.setState(dto.getState());
-        }
-
-        return repository.save(existingDevice);
-    }*/
 
     @Override
     @Transactional
-    public Device updatePartialDevice(Map<String, Object> request, Long deviceId) {
+    public Device updatePartialDevice(DeviceDTO dto, Long deviceId) {
+        if(dto.getCreationTime() != null){
+            throw new IllegalArgumentException("Creation time can not be updated");
+        }
         Device existingDevice = repository.findById(deviceId)
-                .orElseThrow(DeviceNotFoundException::new);
+                .orElseThrow(()->new DeviceNotFoundException("Device not Found"));
 
-
-            request.forEach((k,v) -> {
-
-            Field field = ReflectionUtils.findField(Device.class, k);
-            field.setAccessible(true);
-            ReflectionUtils.setField(field, existingDevice, v);
-
-        });
-        return  repository.save(existingDevice);
+        if(existingDevice.getState() == StateEnums.INUSE){
+            if(dto.getName() != null || dto.getBrand() != null){
+                throw new IllegalArgumentException("Device in USE can not updateD");
+            }
         }
 
 
-
-        @Override
-    public Device fetchDevice(String deviceName) {
-        return null;
+        Device updatedDevice = DeviceMapper.patchDeviceFromDto(existingDevice, dto);
+        return repository.save(updatedDevice);
+    }
+    @Override
+    public Device fetchSingleDevice(Long deviceId) {
+        if(isEmpty(deviceId)){
+            throw new DeviceNotFoundException("Enter the ID");
+        }
+        return repository.findById(deviceId)
+                .orElseThrow(()->new DeviceNotFoundException("Device not Found"));
     }
 
     @Override
     public List<Device> fetchAllDevice() {
-        return List.of();
+        return repository.findAll();
     }
 
     @Override
-    public List<Device> fetchDeviceByBrand(String brandName) {
-        return List.of();
+    public List<Device> fetchDevicesByBrand(String brand) {
+        if(brand == null || brand.trim().isEmpty()){
+            throw new IllegalArgumentException("Brand must be provided");
+        }
+        List<Device> devices = repository.findByBrand(brand);
+        if(devices.isEmpty()){
+            throw new DeviceNotFoundException("Device not Found");
+        }
+        return devices;
     }
 
     @Override
-    public List<Device> fetchDeviceByState(String state) {
-        return List.of();
+    public List<Device> fetchDevicesByState(String state) {
+        if (state == null || state.trim().isEmpty()) {
+            throw new IllegalArgumentException("State must be provided");
+        }
+
+        StateEnums stateEnum;
+        try {
+            stateEnum = StateEnums.valueOf(state.toUpperCase()); // Convert the String for Enum
+        } catch (IllegalArgumentException ex) {
+            throw new IllegalArgumentException("Invalid state value: " + state);
+        }
+
+        List<Device> devices = repository.findByState(stateEnum);
+
+        if (devices.isEmpty()) {
+            throw new DeviceNotFoundException("No devices found with state: " + state);
+        }
+
+        return devices;
     }
+
 
     @Override
-    public void deleteDevice(String deviceName) {
+    public void deleteDevice(Long deviceId) {
+        if(isEmpty(deviceId)){
+            throw new DeviceNotFoundException("Device must be provided");
+        }
+        Device existingDevice = repository.findById(deviceId)
+                .orElseThrow(()-> new DeviceNotFoundException("Device not Found"));
 
+        if(existingDevice.getState() == StateEnums.INUSE){
+            throw new IllegalArgumentException("Device in USE can not DELETED");
+        }
+
+        repository.delete(existingDevice);
     }
+
 }

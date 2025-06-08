@@ -25,6 +25,7 @@ public class Device {
     @Column(name = "creationTime")
     private Time creationTime;
     @Column(name = "state")
+    @Enumerated(EnumType.STRING)
     private StateEnums state;
 
 }

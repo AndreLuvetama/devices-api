@@ -6,7 +6,12 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.NOT_FOUND)
 public class DeviceNotFoundException extends RuntimeException{
-    public DeviceNotFoundException(){
-        super("Device not Found");
+    private static final long serialVersionUID = -6588856562733498763L;
+    public DeviceNotFoundException(String message){
+        super(message);
+    }
+
+    public DeviceNotFoundException(String message, Throwable throwable) {
+        super(message, throwable);
     }
 }
