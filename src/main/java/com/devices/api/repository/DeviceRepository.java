@@ -1,3 +1,4 @@
+
 package com.devices.api.repository;
 
 import com.devices.api.domain.entity.Device;

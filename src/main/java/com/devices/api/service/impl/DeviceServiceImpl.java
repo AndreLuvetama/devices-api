@@ -25,6 +25,7 @@ public class DeviceServiceImpl implements DeviceService {
     private final DeviceRepository repository;
 
 
+
     @Override
     public Device create(DeviceDTO dto) {
         Device device = new Device();
@@ -42,14 +43,26 @@ public class DeviceServiceImpl implements DeviceService {
     @Override
     @Transactional
     public Device updateFullyDevice(DeviceDTO dto, Long deviceId) {
-        Device device = repository.findById(deviceId)
+        if(dto.getCreationTime() != null){
+            throw new IllegalArgumentException("Creation time can not be updated");
+        }
+        Device existingDevice = repository.findById(deviceId)
                 .orElseThrow(()->new DeviceNotFoundException("Device not Found"));
-        Device updatedDevice = DeviceMapper.putDeviceFromDto(device, dto);
+
+        //Valid if state is in-use
+        if (existingDevice.getState() == StateEnums.INUSE) {
+            if (!existingDevice.getName().equals(dto.getName()) ||
+                    !existingDevice.getBrand().equals(dto.getBrand())) {
+                throw new IllegalStateException("Name and brand properties cannot be updated if the device is in use.");
+            }
+        }
+
+        Device updatedDevice = DeviceMapper.putDeviceFromDto(existingDevice, dto);
                         repository.save(updatedDevice);
         return  updatedDevice;
     }
 
-
+    //Update Partial Device
     @Override
     @Transactional
     public Device updatePartialDevice(DeviceDTO dto, Long deviceId) {
@@ -58,14 +71,12 @@ public class DeviceServiceImpl implements DeviceService {
         }
         Device existingDevice = repository.findById(deviceId)
                 .orElseThrow(()->new DeviceNotFoundException("Device not Found"));
-
+        //Valid if the state is in use and the field that will be updated
         if(existingDevice.getState() == StateEnums.INUSE){
             if(dto.getName() != null || dto.getBrand() != null){
-                throw new IllegalArgumentException("Device in USE can not updateD");
+                throw new IllegalArgumentException("Device in USE can not updated");
             }
         }
-
-
         Device updatedDevice = DeviceMapper.patchDeviceFromDto(existingDevice, dto);
         return repository.save(updatedDevice);
     }
@@ -107,7 +118,6 @@ public class DeviceServiceImpl implements DeviceService {
         } catch (IllegalArgumentException ex) {
             throw new IllegalArgumentException("Invalid state value: " + state);
         }
-
         List<Device> devices = repository.findByState(stateEnum);
 
         if (devices.isEmpty()) {

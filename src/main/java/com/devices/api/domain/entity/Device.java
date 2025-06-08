@@ -22,10 +22,10 @@ public class Device {
     private String name;
     @Column(name = "brand", length = 50)
     private String brand;
-    @Column(name = "creationTime")
+    @Column(name = "creationTime") // LocalTime
     private Time creationTime;
     @Column(name = "state")
     @Enumerated(EnumType.STRING)
-    private StateEnums state;
+    private StateEnums state; //Enum AVAILABLE, IN-USE, INACTIVE
 
 }

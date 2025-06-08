@@ -41,18 +41,19 @@ public class DeviceController {
     public Device findSingleDevice(@PathVariable("id") Long deviceId){
         return service.fetchSingleDevice(deviceId);
     }
-
+    //Getting all devices.
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<Device> fetchAllDevice(){
         return service.fetchAllDevice();
     }
-
+    //Fetch devices by brand.
     @GetMapping("/brand/{brand}")
     @ResponseStatus(HttpStatus.OK)
     public List<Device> fetchDeviceByBrand(@PathVariable("brand") String brand ){
         return service.fetchDevicesByBrand(brand);
     }
+    //Fetch devices by state.
     @GetMapping("/state/{state}")
     @ResponseStatus(HttpStatus.OK)
     public List<Device> fetchDeviceByState(@PathVariable("state") String state ){
@@ -63,7 +64,4 @@ public class DeviceController {
     public void deleteDevice(@PathVariable("id") Long deviceId){
         service.deleteDevice(deviceId);
     }
-
-
-
 }
