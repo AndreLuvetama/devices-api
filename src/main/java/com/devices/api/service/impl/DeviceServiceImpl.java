@@ -2,6 +2,7 @@ package com.devices.api.service.impl;
 
 import com.devices.api.domain.entity.Device;
 import com.devices.api.domain.enums.StateEnums;
+import com.devices.api.exception.DeviceIllegalStateException;
 import com.devices.api.exception.DeviceNotFoundException;
 import com.devices.api.repository.DeviceRepository;
 import com.devices.api.rest.dto.DeviceDTO;
@@ -34,9 +35,8 @@ public class DeviceServiceImpl implements DeviceService {
         device.setName(dto.getName());
         device.setCreationTime(Time.valueOf(LocalTime.now())); //get the current system time (just hour, minute and second, without the date).
         device.setState(StateEnums.AVAILABLE);
-        Device deviceSave =  repository.save(device);
 
-        return deviceSave;
+        return repository.save(device);
     }
 
     //Fully update an existing device.
@@ -44,16 +44,16 @@ public class DeviceServiceImpl implements DeviceService {
     @Transactional
     public Device updateFullyDevice(DeviceDTO dto, Long deviceId) {
         if(dto.getCreationTime() != null){
-            throw new IllegalArgumentException("Creation time can not be updated");
+            throw new DeviceIllegalStateException("Creation time can not be updated");
         }
         Device existingDevice = repository.findById(deviceId)
                 .orElseThrow(()->new DeviceNotFoundException("Device not Found"));
 
-        //Valid if state is in-use
+        //Brand and name can not be updated if state is INUSE
         if (existingDevice.getState() == StateEnums.INUSE) {
             if (!existingDevice.getName().equals(dto.getName()) ||
                     !existingDevice.getBrand().equals(dto.getBrand())) {
-                throw new IllegalStateException("Name and brand properties cannot be updated if the device is in use.");
+                throw new DeviceIllegalStateException("Name and brand properties cannot be updated if the device is in use.");
             }
         }
 
@@ -67,19 +67,20 @@ public class DeviceServiceImpl implements DeviceService {
     @Transactional
     public Device updatePartialDevice(DeviceDTO dto, Long deviceId) {
         if(dto.getCreationTime() != null){
-            throw new IllegalArgumentException("Creation time can not be updated");
+            throw new DeviceIllegalStateException("Creation time can not be updated");
         }
         Device existingDevice = repository.findById(deviceId)
                 .orElseThrow(()->new DeviceNotFoundException("Device not Found"));
         //Valid if the state is in use and the field that will be updated
         if(existingDevice.getState() == StateEnums.INUSE){
             if(dto.getName() != null || dto.getBrand() != null){
-                throw new IllegalArgumentException("Device in USE can not updated");
+                throw new DeviceIllegalStateException("Device in USE can not updated");
             }
         }
         Device updatedDevice = DeviceMapper.patchDeviceFromDto(existingDevice, dto);
         return repository.save(updatedDevice);
     }
+    //Getting a single device
     @Override
     public Device fetchSingleDevice(Long deviceId) {
         if(isEmpty(deviceId)){
@@ -94,10 +95,11 @@ public class DeviceServiceImpl implements DeviceService {
         return repository.findAll();
     }
 
+    //Getting a list of devices by brand
     @Override
     public List<Device> fetchDevicesByBrand(String brand) {
         if(brand == null || brand.trim().isEmpty()){
-            throw new IllegalArgumentException("Brand must be provided");
+            throw new DeviceIllegalStateException("Brand must be provided");
         }
         List<Device> devices = repository.findByBrand(brand);
         if(devices.isEmpty()){
@@ -106,10 +108,11 @@ public class DeviceServiceImpl implements DeviceService {
         return devices;
     }
 
+    // Getting devices with the same state
     @Override
     public List<Device> fetchDevicesByState(String state) {
         if (state == null || state.trim().isEmpty()) {
-            throw new IllegalArgumentException("State must be provided");
+            throw new DeviceIllegalStateException("State must be provided");
         }
 
         StateEnums stateEnum;
@@ -119,7 +122,6 @@ public class DeviceServiceImpl implements DeviceService {
             throw new IllegalArgumentException("Invalid state value: " + state);
         }
         List<Device> devices = repository.findByState(stateEnum);
-
         if (devices.isEmpty()) {
             throw new DeviceNotFoundException("No devices found with state: " + state);
         }
@@ -127,7 +129,7 @@ public class DeviceServiceImpl implements DeviceService {
         return devices;
     }
 
-
+   // Deleting a single device
     @Override
     public void deleteDevice(Long deviceId) {
         if(isEmpty(deviceId)){
@@ -137,7 +139,7 @@ public class DeviceServiceImpl implements DeviceService {
                 .orElseThrow(()-> new DeviceNotFoundException("Device not Found"));
 
         if(existingDevice.getState() == StateEnums.INUSE){
-            throw new IllegalArgumentException("Device in USE can not DELETED");
+            throw new DeviceIllegalStateException("Device in USE can not DELETED");
         }
 
         repository.delete(existingDevice);
