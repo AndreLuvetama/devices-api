@@ -8,6 +8,7 @@
 For building and running the application you need:      
 - JDK 21 <br>
 - Maven 3.9 <br>
+- Database Postegress
 - clone the project https://github.com/AndreLuvetama/devices-api.git
 
 Docker  
