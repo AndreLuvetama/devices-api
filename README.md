@@ -1,5 +1,5 @@
 
-# DEVECES-API
+# DEVICES-API
 
  REST API that persist and managing device resources.
 
