@@ -11,23 +11,10 @@ For building and running the application you need:
 - clone the project https://github.com/AndreLuvetama/devices-api.git
 
 Docker  
+- Docker compose up
+- Configure database in path http://localhost:15432/browser/
 
-#Create Network    
-docker create network devicesdb-network    
-
-#Run container Postgres in version 16.3  
-docker run --name devicesdb -p 5432:5432 -e POSTGRES_PASSWORD=postgres -e POSTGRES_USER=postgres -e POSTGRES_DB=devicesdb -d --network devicesdb-network postgres:16.3
-
-#Run Pgadmin 4  
-docker run --name pgadmin4 -p 15432:80 -e PGADMIN_DEFAULT_EMAIL=admin@admin.com -e PGADMIN_DEFAULT_PASSWORD=admin -d --network devicesdb-network dpage/pgadmin4
-
-#Built the app    
-docker build -t devicesapi .
-
-#Run app   
-docker run --name devicesapi -p 8089:8089 devicesapi
-
-#End points for testing  
+#Endpoints for testing  
 Creating new device  
 http://localhost:8089/api/device
 
@@ -40,8 +27,11 @@ http://localhost:8089/api/device/brand/{brandName}
 Fetch devices by state.           
 http://localhost:8089/api/device/state/{stateName}     
 
-Delete a single device.          
-http://localhost:8089/api/device/{deviceId}    
+Delete a single device.              
+http://localhost:8089/api/device/{deviceId} 
+
+Update Partial/Full device    
+http://localhost:8089/api/device/{deviceId}
 
 
 
