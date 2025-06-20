@@ -18,22 +18,22 @@ Docker
 
 #Endpoints for testing  
 Creating new device  
-http://localhost:8089/api/device
+http://localhost:8089/v1/api/device
 
 Geting a single device  
-http://localhost:8089/api/device/{deviceId}
+http://localhost:8089/v1/api/device/{deviceId}
 
 Fetch devices by brand.    
-http://localhost:8089/api/device/brand/{brandName}     
+http://localhost:8089/v1/api/device/brand/{brandName}     
 
 Fetch devices by state.           
-http://localhost:8089/api/device/state/{stateName}     
+http://localhost:8089/v1/api/device/state/{stateName}     
 
 Delete a single device.              
-http://localhost:8089/api/device/{deviceId} 
+http://localhost:8089/v1/api/device/{deviceId} 
 
 Update Partial/Full device    
-http://localhost:8089/api/device/{deviceId}
+http://localhost:8089/v1/api/device/{deviceId}
 
 
 
