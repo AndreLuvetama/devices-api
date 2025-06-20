@@ -13,7 +13,7 @@ For building and running the application you need:
 - clone the project https://github.com/AndreLuvetama/devices-api.git
 
 Docker  
-- Docker compose up
+- docker compose up
 - Configure database in path http://localhost:15432/browser/
 
 #Endpoints for testing  
