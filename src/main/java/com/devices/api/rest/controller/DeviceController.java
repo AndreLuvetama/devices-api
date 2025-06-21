@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/device")
+@RequestMapping("/v1/api/device")
 @RequiredArgsConstructor
 public class DeviceController {
     private final DeviceServiceImpl service;
@@ -25,20 +25,20 @@ public class DeviceController {
     //Fully update an existinng device.
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Device updateFullyDevice(@RequestBody DeviceDTO dto, @PathVariable("id") Long deviceId){
+    public DeviceDTO updateFullyDevice(@RequestBody DeviceDTO dto, @PathVariable("id") Long deviceId){
         return service.updateFullyDevice(dto,deviceId);
     }
     //Partial update an existinng device.
 
     @PatchMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Device updatePartialDevice(@RequestBody DeviceDTO dto, @PathVariable("id") Long deviceId){
+    public DeviceDTO updatePartialDevice(@RequestBody DeviceDTO dto, @PathVariable("id") Long deviceId){
           return service.updatePartialDevice(dto,deviceId);
     }
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Device findSingleDevice(@PathVariable("id") Long deviceId){
+    public DeviceDTO findSingleDevice(@PathVariable("id") Long deviceId){
         return service.fetchSingleDevice(deviceId);
     }
     //Getting all devices.
@@ -50,13 +50,13 @@ public class DeviceController {
     //Fetch devices by brand.
     @GetMapping("/brand/{brand}")
     @ResponseStatus(HttpStatus.OK)
-    public List<Device> fetchDeviceByBrand(@PathVariable("brand") String brand ){
+    public List<DeviceDTO> fetchDeviceByBrand(@PathVariable("brand") String brand ){
         return service.fetchDevicesByBrand(brand);
     }
     //Fetch devices by state.
     @GetMapping("/state/{state}")
     @ResponseStatus(HttpStatus.OK)
-    public List<Device> fetchDeviceByState(@PathVariable("state") String state ){
+    public List<DeviceDTO> fetchDeviceByState(@PathVariable("state") String state ){
         return service.fetchDevicesByState(state);
     }
 

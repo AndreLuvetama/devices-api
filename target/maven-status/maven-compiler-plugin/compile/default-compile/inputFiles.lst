@@ -1,6 +1,7 @@
 /home/andre-luvetama/Documentos/Teste-1Global/devices-api/src/main/java/com/devices/api/Application.java
 /home/andre-luvetama/Documentos/Teste-1Global/devices-api/src/main/java/com/devices/api/domain/entity/Device.java
 /home/andre-luvetama/Documentos/Teste-1Global/devices-api/src/main/java/com/devices/api/domain/enums/StateEnums.java
+/home/andre-luvetama/Documentos/Teste-1Global/devices-api/src/main/java/com/devices/api/exception/DeviceIllegalStateException.java
 /home/andre-luvetama/Documentos/Teste-1Global/devices-api/src/main/java/com/devices/api/exception/DeviceNotFoundException.java
 /home/andre-luvetama/Documentos/Teste-1Global/devices-api/src/main/java/com/devices/api/repository/DeviceRepository.java
 /home/andre-luvetama/Documentos/Teste-1Global/devices-api/src/main/java/com/devices/api/rest/controller/DeviceController.java
@@ -8,3 +9,4 @@
 /home/andre-luvetama/Documentos/Teste-1Global/devices-api/src/main/java/com/devices/api/rest/mapper/DeviceMapper.java
 /home/andre-luvetama/Documentos/Teste-1Global/devices-api/src/main/java/com/devices/api/service/DeviceService.java
 /home/andre-luvetama/Documentos/Teste-1Global/devices-api/src/main/java/com/devices/api/service/impl/DeviceServiceImpl.java
+/home/andre-luvetama/Documentos/Teste-1Global/devices-api/src/main/java/com/devices/api/util/ValidationData.java

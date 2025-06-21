@@ -1,1 +1,12 @@
+com/devices/api/domain/entity/Device.class
 com/devices/api/Application.class
+com/devices/api/util/ValidationData.class
+com/devices/api/repository/DeviceRepository.class
+com/devices/api/exception/DeviceNotFoundException.class
+com/devices/api/service/DeviceService.class
+com/devices/api/exception/DeviceIllegalStateException.class
+com/devices/api/service/impl/DeviceServiceImpl.class
+com/devices/api/domain/enums/StateEnums.class
+com/devices/api/rest/controller/DeviceController.class
+com/devices/api/rest/dto/DeviceDTO.class
+com/devices/api/rest/mapper/DeviceMapper.class

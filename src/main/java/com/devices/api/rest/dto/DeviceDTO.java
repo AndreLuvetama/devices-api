@@ -1,5 +1,6 @@
 package com.devices.api.rest.dto;
 
+import com.devices.api.domain.entity.Device;
 import com.devices.api.domain.enums.StateEnums;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,7 +11,7 @@ import java.sql.Time;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class DeviceDTO {
+public class DeviceDTO{
     private String name;
     private String brand;
     private Time creationTime;

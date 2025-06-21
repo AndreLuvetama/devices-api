@@ -8,15 +8,15 @@ import com.devices.api.repository.DeviceRepository;
 import com.devices.api.rest.dto.DeviceDTO;
 import com.devices.api.rest.mapper.DeviceMapper;
 import com.devices.api.service.DeviceService;
+import com.devices.api.util.ValidationData;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-
 import java.sql.Time;
 import java.time.LocalTime;
 import java.util.List;
-
+import java.util.stream.Collectors;
 
 import static org.springframework.util.ObjectUtils.isEmpty;
 
@@ -24,6 +24,8 @@ import static org.springframework.util.ObjectUtils.isEmpty;
 @RequiredArgsConstructor
 public class DeviceServiceImpl implements DeviceService {
     private final DeviceRepository repository;
+    @Autowired
+    private ValidationData validationData;
 
 
 
@@ -42,7 +44,10 @@ public class DeviceServiceImpl implements DeviceService {
     //Fully update an existing device.
     @Override
     @Transactional
-    public Device updateFullyDevice(DeviceDTO dto, Long deviceId) {
+    public DeviceDTO updateFullyDevice(DeviceDTO dto, Long deviceId) {
+        //Validate if the deviceId field is filled in
+        validationData.validateDeviceId(deviceId);
+
         if(dto.getCreationTime() != null){
             throw new DeviceIllegalStateException("Creation time can not be updated");
         }
@@ -59,13 +64,16 @@ public class DeviceServiceImpl implements DeviceService {
 
         Device updatedDevice = DeviceMapper.putDeviceFromDto(existingDevice, dto);
                         repository.save(updatedDevice);
-        return  updatedDevice;
+        return DeviceMapper.mapDeviceToDTO(updatedDevice);
     }
 
     //Update Partial Device
     @Override
     @Transactional
-    public Device updatePartialDevice(DeviceDTO dto, Long deviceId) {
+    public DeviceDTO updatePartialDevice(DeviceDTO dto, Long deviceId) {
+        //Validate if the deviceId field is filled in
+        validationData.validateDeviceId(deviceId);
+
         if(dto.getCreationTime() != null){
             throw new DeviceIllegalStateException("Creation time can not be updated");
         }
@@ -78,16 +86,19 @@ public class DeviceServiceImpl implements DeviceService {
             }
         }
         Device updatedDevice = DeviceMapper.patchDeviceFromDto(existingDevice, dto);
-        return repository.save(updatedDevice);
+         repository.save(updatedDevice);
+        return DeviceMapper.mapDeviceToDTO(updatedDevice);
     }
     //Getting a single device
     @Override
-    public Device fetchSingleDevice(Long deviceId) {
-        if(isEmpty(deviceId)){
-            throw new DeviceNotFoundException("Enter the ID");
-        }
-        return repository.findById(deviceId)
-                .orElseThrow(()->new DeviceNotFoundException("Device not Found"));
+    public DeviceDTO fetchSingleDevice(Long deviceId) {
+        //Validate if the deviceId field is filled in
+         validationData.validateDeviceId(deviceId);
+
+        Device device = repository.findById(deviceId)
+                .orElseThrow(() -> new DeviceNotFoundException("Device not Found!"));
+        return DeviceMapper.mapDeviceToDTO(device);
+
     }
 
     @Override
@@ -97,7 +108,7 @@ public class DeviceServiceImpl implements DeviceService {
 
     //Getting a list of devices by brand
     @Override
-    public List<Device> fetchDevicesByBrand(String brand) {
+    public List<DeviceDTO> fetchDevicesByBrand(String brand) {
         if(brand == null || brand.trim().isEmpty()){
             throw new DeviceIllegalStateException("Brand must be provided");
         }
@@ -105,12 +116,13 @@ public class DeviceServiceImpl implements DeviceService {
         if(devices.isEmpty()){
             throw new DeviceNotFoundException("Device not Found");
         }
-        return devices;
+        //Performs a bulk conversion of a list of entities (Device) to a list of DTOs
+         return devices.stream().map(DeviceMapper::mapDeviceToDTO).collect(Collectors.toList());
     }
 
     // Getting devices with the same state
     @Override
-    public List<Device> fetchDevicesByState(String state) {
+    public List<DeviceDTO> fetchDevicesByState(String state) {
         if (state == null || state.trim().isEmpty()) {
             throw new DeviceIllegalStateException("State must be provided");
         }
@@ -126,15 +138,15 @@ public class DeviceServiceImpl implements DeviceService {
             throw new DeviceNotFoundException("No devices found with state: " + state);
         }
 
-        return devices;
+        //Performs a bulk conversion of a list of entities (Device) to a list of DTOs
+        return devices.stream().map(DeviceMapper::mapDeviceToDTO).collect(Collectors.toList());
     }
 
    // Deleting a single device
     @Override
     public void deleteDevice(Long deviceId) {
-        if(isEmpty(deviceId)){
-            throw new DeviceNotFoundException("Device must be provided");
-        }
+       validationData.validateDeviceId(deviceId);
+
         Device existingDevice = repository.findById(deviceId)
                 .orElseThrow(()-> new DeviceNotFoundException("Device not Found"));
 

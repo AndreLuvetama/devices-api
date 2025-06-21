@@ -7,11 +7,11 @@ import java.util.List;
 
 public interface DeviceService {
     Device create(DeviceDTO dto);
-    Device updateFullyDevice(DeviceDTO dto, Long id);
-    Device updatePartialDevice(DeviceDTO dto, Long id);
-    Device fetchSingleDevice(Long deviceId);
+    DeviceDTO updateFullyDevice(DeviceDTO dto, Long id);
+    DeviceDTO updatePartialDevice(DeviceDTO dto, Long id);
+    DeviceDTO fetchSingleDevice(Long deviceId);
     List<Device> fetchAllDevice();
-    List<Device> fetchDevicesByBrand(String brand);
-    List<Device> fetchDevicesByState(String state);
+    List<DeviceDTO> fetchDevicesByBrand(String brand);
+    List<DeviceDTO> fetchDevicesByState(String state);
     void deleteDevice(Long deviceId);
 }
