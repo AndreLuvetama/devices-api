@@ -1,2 +1,4 @@
 /home/andre-luvetama/Documentos/Teste-1Global/devices-api/src/test/java/com/devices/api/DevicesapiApplicationTests.java
+/home/andre-luvetama/Documentos/Teste-1Global/devices-api/src/test/java/com/devices/api/controller/DeviceControllerTest.java
+/home/andre-luvetama/Documentos/Teste-1Global/devices-api/src/test/java/com/devices/api/integrationtest/DeviceIntegrationTest.java
 /home/andre-luvetama/Documentos/Teste-1Global/devices-api/src/test/java/com/devices/api/repository/DeviceRepositoryTest.java

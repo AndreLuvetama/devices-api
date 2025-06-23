@@ -1,2 +1,5 @@
+com/devices/api/controller/DeviceControllerTest$MockConfig.class
 com/devices/api/DevicesapiApplicationTests.class
+com/devices/api/controller/DeviceControllerTest.class
+com/devices/api/integrationtest/DeviceIntegrationTest.class
 com/devices/api/repository/DeviceRepositoryTest.class
